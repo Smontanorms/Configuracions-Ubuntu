@@ -11,23 +11,17 @@ iptables -t nat -P PREROUTING ACCEPT
 iptables -t nat -P POSTROUTING ACCEPT
 #empezamos a filtrar:
 sudo echo "filtrando"
+sudo iptables -t nat -A POSTROUTING -j MASQUERADE
 sudo iptables -t nat -A POSTROUTING -s 172.16.12.1/24 -o enp0s8 -j MASQUERADE
 sudo iptables -t nat -A POSTROUTING -s 172.16.20.1/24 -o enp0s9 -j MASQUERADE
 #aceptar el puerto 80 (http).
-#(cambio forward por input)
-#(cambio -A por -I)
 iptables -I INPUT -s 172.16.10.3/24 -i enp0s8 -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT -s 172.16.10.3/14 -i enp0s9 -p tcp --dport 80 -j ACCEPT
-#aceptar las consultas DNS
-#borrar las normas de consuta DNS<---configurar /etc/resolv.conf
-iptables -A FORWARD -s 172.16.12.1/24 -i enp0s8 -p tcp --dport 53 -j ACCEPT
-iptables -A FORWARD -s 172.16.12.1/24 -i enp0s8 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -s 172.16.20.1/24 -i enp0s9 -p tcp --dport 53 -j ACCEPT
-iptables -A FORWARD -s 172.16.20.1/14 -i enp0s9 -p tcp --dport 53 -j ACCEPT
 #redireccionar del servidor apache al proxy inverso(Apache)
-#(cambio --to-destination por --to)
-ipables -t nat -A PREROUTING -i enp0s8 -p tcp --dport 80 -j DNAT --to 172.16.12.2:80
-iptables -t nat -A PREROUTING -i enp0s9 -p tcp --dport 80 -j DNAT --to 172.16.12.2:80 
+#sudo ipables -t nat -A PREROUTING -i enp0s8 -p tcp --dport 80 -j DNAT --to-destination 172.16.12.2:80
+#sudo iptables -t nat -A PREROUTING -i enp0s9 -p tcp --dport 80 -j DNAT --to-destination 172.16.12.2:80
+sudo iptables -t nat -A PREROUTING -p tcp -s 172.16.12.2/24 --dport 80  -j DNAT --to-destination 172.16.10.3:80
+sudo iptables -t nat -A PREROUTING -i enp0s8 -p tcp --dport 80 -j DNAT --to-destination 172.16.10.3:80
 #iniciar el enrutamiento:
 echo "1" | sudo tee -a /proc/sys/net/ipv4/ip_forward
 
