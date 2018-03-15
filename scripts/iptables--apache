@@ -19,8 +19,8 @@ sudo iptables -t nat -A POSTROUTING -s 172.16.20.1/24 -o enp0s9 -j MASQUERADE
 iptables -I FORWARD -s 172.16.10.3/24 -i enp0s8 -p tcp --dport 80 -j ACCEPT
 iptables -I FORWARD -s 172.16.10.3/14 -i enp0s9 -p tcp --dport 80 -j ACCEPT
 #redireccionar del servidor apache al proxy inverso(Apache)
-#sudo ipables -t nat -A PREROUTING -i enp0s8 -p tcp --dport 80 -j DNAT --to-destination 172.16.12.2:80
-#sudo iptables -t nat -A PREROUTING -i enp0s9 -p tcp --dport 80 -j DNAT --to-destination 172.16.12.2:80
+sudo ipables -t nat -A PREROUTING -i enp0s8 -p tcp --dport 80 -j DNAT --to-destination 172.16.12.2:80
+sudo iptables -t nat -A PREROUTING -i enp0s9 -p tcp --dport 80 -j DNAT --to-destination 172.16.12.2:80
 sudo iptables -t nat -A PREROUTING -p tcp -s 172.16.12.2/24 --dport 80  -j DNAT --to-destination 172.16.10.3:80
 sudo iptables -t nat -A PREROUTING -i enp0s8 -p tcp --dport 80 -j DNAT --to-destination 172.16.10.3:80
 sudo iptables -t nat -A PREROUTING -i enp0s9 -p tcp --dport 80 -j DNAT --to-destination 172.16.10.3:80
