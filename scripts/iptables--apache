@@ -1,5 +1,5 @@
 #!/bin/bash/
-
+#añadir el .sh al final del fichero sin no no funcinara.
 #primero borramos las reglas iptables ya establecidas
 iptables -F
 iptables -t nat -F
