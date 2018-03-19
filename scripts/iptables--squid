@@ -1,4 +1,5 @@
 #!/bin/bash/
+#añadir el .sh al final del fichero sin no no funcinara.
 #reglas pra las iptables del squid proxy:
 #borrar las normas ya establecidas:
 sudo iptables -F
